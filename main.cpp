@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    ofstream log("pso.log"); // Create logging filestream
+    ofstream log("bso.log"); // Create logging filestream
     Swarm swarm(&log);       // Initiate swarm
     swarm.start();           // Start it
 }

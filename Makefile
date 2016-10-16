@@ -5,7 +5,7 @@ SOURCES    = main.cpp \
              swarm.cpp \
              bee.cpp
 OBJECTS    = $(SOURCES:.cpp=.o)
-EXECUTABLE = pso
+EXECUTABLE = bso
 
 all: $(SOURCES) $(EXECUTABLE)
 
