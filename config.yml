@@ -1,0 +1,8 @@
+# This file contains all settings for PSO (Particle swarm optimization)
+---
+N: 2              # Dimentions
+nIterations: 1000 # Amount of iterations
+nBees: 10         # Amount of bees
+pCoef: 0.5        # Bee's best position coefficient
+gCoef: 0.5        # Swarm's best position coefficient
+vCoef: 0.5        # Velocity coefficient
