@@ -1,6 +1,6 @@
 CC         = g++
-CFLAGS     = -std=c++1y -O2 -c -Wall -Wextra
-LFLAGS     = -std=c++1y -lyaml-cpp
+CFLAGS     = -std=c++14 -O2 -c -Wall -Wextra
+LFLAGS     = -std=c++14 -lyaml-cpp
 SOURCES    = main.cpp \
              swarm.cpp \
              bee.cpp
@@ -16,4 +16,4 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o $(EXECUTABLE)
+	rm -rf *.o $(EXECUTABLE) $(EXECUTABLE).log
