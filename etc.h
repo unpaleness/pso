@@ -1,7 +1,7 @@
 #ifndef _ETC_H_
 #define _ETC_H_
 
-namespace BSO
+namespace PSO
 {
     const streamsize W = 12;
 }

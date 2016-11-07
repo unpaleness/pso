@@ -1,14 +1,14 @@
 # This file contains all settings for PSO (Particle swarm optimization)
 ---
-# Enable/disable detailed info about every bee
-enableBeeLog: false
+# Enable/disable detailed info about every particle
+enableParticleLog: false
 # Dimentions
 N: 2
 # Amount of iterations
 nIterations: 200
-# Amount of bees
-nBees: 5
-# Bee's best position coefficient
+# Amount of particles
+nParticles: 5
+# Particle's best position coefficient
 pCoef: 0.5
 # Swarm's best position coefficient
 gCoef: 0.5

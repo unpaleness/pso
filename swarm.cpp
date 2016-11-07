@@ -6,7 +6,7 @@
 #include "swarm.h"
 #include "etc.h"
 
-using namespace BSO;
+using namespace PSO;
 
 /******************\
 |* PUBLIC METHODS *|
@@ -27,11 +27,11 @@ Swarm::~Swarm()
         delete [] max;
         delete [] g;
     }
-    if (areBeesCreated)
-        for (int i = 0; i < nBees; ++i)
-            delete bees[i];
-    if (areBeesAllocated)
-        delete [] bees;
+    if (areParticlesCreated)
+        for (int i = 0; i < nParticles; ++i)
+            delete particles[i];
+    if (areParticlesAllocated)
+        delete [] particles;
 }
 
 int Swarm::getN() { return N; }
@@ -52,7 +52,7 @@ const double *Swarm::getG() { return g; }
 
 void Swarm::setG(unsigned int i, double val) { g[i] = val; }
 
-bool Swarm::getEnableBeeLog() { return enableBeeLog; }
+bool Swarm::getEnableParticleLog() { return enableParticleLog; }
 
 void Swarm::start()
 {
@@ -66,11 +66,11 @@ void Swarm::start()
     *log << "Success!" << endl << endl;
     *log << "=================================================================\
 ===============" << endl;
-    // Trying to create bees
-    *log << "Creating bees..." << endl;
-    if (!createBees())
+    // Trying to create particles
+    *log << "Creating particles..." << endl;
+    if (!createParticles())
     {
-        *log << "Failed to create bees. Terminating..." << endl;
+        *log << "Failed to create particles. Terminating..." << endl;
         return;
     }
     *log << "Success!" << endl << endl;
@@ -81,18 +81,18 @@ void Swarm::start()
         *log << "=============================================================\
 ===================" << endl;
         *log << "Starting " << it + 1 << " iteration..." << endl;
-        for (int iBee = 0; iBee < nBees; ++iBee)
+        for (int iParticle = 0; iParticle < nParticles; ++iParticle)
         {
-            if (!enableBeeLog)
+            if (!enableParticleLog)
             {
-                *log << " Bee " << iBee + 1 << "(#" << bees[iBee] << "): ";
-                switch(bees[iBee]->update())
+                *log << " Particle " << iParticle + 1 << "(#" << particles[iParticle] << "): ";
+                switch(particles[iParticle]->update())
                 {
                     case 0:
                         *log << "out of bounds, skipping..." << endl;
                         break;
                     case 2:
-                        *log << "found new bee's best position..." << endl;
+                        *log << "found new particle's best position..." << endl;
                         break;
                     case 3:
                         *log << "found new swarm's position: (";
@@ -110,7 +110,7 @@ void Swarm::start()
                 }
             }
             else
-                bees[iBee]->update();
+                particles[iParticle]->update();
         }
     }
 }
@@ -138,7 +138,7 @@ bool Swarm::readConfig(const string filename)
         for (const auto &v : config)
         {
             *log << "  ";
-            log->width(BSO::W);
+            log->width(PSO::W);
             *log << v.first.as<string>() << ": " << v.second.as<string>()
                  << endl;
         }
@@ -147,7 +147,7 @@ bool Swarm::readConfig(const string filename)
         min = new double [N];
         max = new double [N];
         g = new double [N];
-        // If we are here without exceptions, memory has been allocated
+        // If we are here without exceptions, memory has particlen allocated
         isMemoryAlloc = true;
 
         // Read mins and maxes from yaml-file
@@ -166,11 +166,11 @@ bool Swarm::readConfig(const string filename)
             g[i] = min[i] + (max[i] - min[i]) / 2.0;
 
         nIterations = config["nIterations"].as<int>();
-        nBees = config["nBees"].as<int>();
+        nParticles = config["nParticles"].as<int>();
         pCoef = config["pCoef"].as<double>();
         gCoef = config["gCoef"].as<double>();
         vCoef = config["vCoef"].as<double>();
-        enableBeeLog = config["enableBeeLog"].as<bool>();
+        enableParticleLog = config["enableParticleLog"].as<bool>();
     }
     catch (exception &e)
     {
@@ -188,11 +188,11 @@ than max" << i + 1 << endl;
             status = false;
         }
 
-    // 2) nBees <= 0
-    if (nBees <= 0)
+    // 2) nParticles <= 0
+    if (nParticles <= 0)
     {
-        *log << "Oops! nBees = " << nBees << ", I cannot create " << nBees
-             << " bees, sorry" << endl;
+        *log << "Oops! nParticles = " << nParticles << ", I cannot create " << nParticles
+             << " particles, sorry" << endl;
         status = false;
     }
 
@@ -207,19 +207,19 @@ than max" << i + 1 << endl;
     return status;
 }
 
-bool Swarm::createBees()
+bool Swarm::createParticles()
 {
     try
     {
-        bees = new Bee *[nBees];
-        areBeesAllocated = true;
-        for (int i = 0; i < nBees; ++i)
+        particles = new Particle *[nParticles];
+        areParticlesAllocated = true;
+        for (int i = 0; i < nParticles; ++i)
         {
-            bees[i] = new Bee(log, this);
-            if (!enableBeeLog) *log << " Bee " << i + 1 << "(#" << bees[i]
+            particles[i] = new Particle(log, this);
+            if (!enableParticleLog) *log << " Particle " << i + 1 << "(#" << particles[i]
                                    << ") created" << endl;
         }
-        areBeesCreated = true;
+        areParticlesCreated = true;
     }
     catch (exception &e)
     {

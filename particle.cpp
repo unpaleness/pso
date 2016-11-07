@@ -1,17 +1,17 @@
 #include <cstdlib>
 
-#include "bee.h"
+#include "particle.h"
 #include "etc.h"
 
-using namespace BSO;
+using namespace PSO;
 
 /******************\
 |* PUBLIC METHODS *|
 \******************/
 
-Bee::Bee() {}
+Particle::Particle() {}
 
-Bee::Bee(ofstream *log, Swarm *s)
+Particle::Particle(ofstream *log, Swarm *s)
 {
     this->log = log;
     swarm = s;
@@ -22,7 +22,7 @@ Bee::Bee(ofstream *log, Swarm *s)
     init();
 }
 
-Bee::~Bee()
+Particle::~Particle()
 {
     if (isMemoryAlloc)
     {
@@ -32,23 +32,23 @@ Bee::~Bee()
     }
 }
 
-int Bee::update()
+int Particle::update()
 {
     int status { 1 };   /* 0 - outside, 1 - inside boundaries, 2 - found new
-                           bee's best position, 3 - found new swarm's best
+                           particle's best position, 3 - found new swarm's best
                            position */
     status = updateX(); // update position
     updateV();          // update velocity
-    if (swarm->getEnableBeeLog()) logInfo();          // write to log
-    if (status == 1)    // If bee is inside boundaries, then check for best pos
+    if (swarm->getEnableParticleLog()) logInfo();          // write to log
+    if (status == 1)    // If particle is inside boundaries, then check for best pos
     {
         /* We make MINIMIZATION so we check wheather function value in current
            position is better then in previous */
-        if (swarm->f(x) < swarm->f(p)) // If so, then update bee's best position
+        if (swarm->f(x) < swarm->f(p)) // If so, then update particle's best position
         {
             status = 2;
-            if (swarm->getEnableBeeLog()) *log << "  Good news: bee found new \
-bee's best position, updating..." << endl;
+            if (swarm->getEnableParticleLog()) *log << "  Good news: particle found new \
+particle's best position, updating..." << endl;
             for (int i = 0; i < swarm->getN(); ++i)
                 p[i] = x[i];
         }
@@ -56,14 +56,14 @@ bee's best position, updating..." << endl;
                                                       swarm's best position */
         {
             status = 3;
-            if (swarm->getEnableBeeLog()) *log << "  Good news: bee found new \
+            if (swarm->getEnableParticleLog()) *log << "  Good news: particle found new \
 swarm's best position, updating..." << endl;
             for (int i = 0; i < swarm->getN(); ++i)
                 swarm->setG(i, x[i]);
         }
     }
     else
-        if (swarm->getEnableBeeLog()) *log << "  Warning: bee is outside \
+        if (swarm->getEnableParticleLog()) *log << "  Warning: particle is outside \
 boundaries, skipping her results..." << endl;
     return status;
 }
@@ -72,7 +72,7 @@ boundaries, skipping her results..." << endl;
 |* PRIVATE METHODS *|
 \*******************/
 
-void Bee::init()
+void Particle::init()
 {
     for (int i = 0; i < swarm->getN(); ++i)
     {
@@ -81,7 +81,7 @@ void Bee::init()
         v[i] = dRand(swarm->getMin(i) - swarm->getMax(i),
                      swarm->getMax(i) - swarm->getMin(i));
     }
-    if (swarm->getEnableBeeLog()) logInfo();
+    if (swarm->getEnableParticleLog()) logInfo();
     if (swarm->f(x) < swarm->f(swarm->getG())) /* If so, then update swarm's
                                                   best position */
     {
@@ -90,13 +90,13 @@ void Bee::init()
     }
 }
 
-double Bee::dRand(double min, double max)
+double Particle::dRand(double min, double max)
 {
     double m = (double)rand() / RAND_MAX;
     return min + m * (max - min);
 }
 
-void Bee::updateV()
+void Particle::updateV()
 {
     for(int i = 0; i < swarm->getN(); ++i)
     {
@@ -106,7 +106,7 @@ void Bee::updateV()
     }
 }
 
-int Bee::updateX()
+int Particle::updateX()
 {
     int returnValue { 1 };
     for (int i = 0; i < swarm->getN(); ++i)
@@ -118,38 +118,38 @@ int Bee::updateX()
     return returnValue;
 }
 
-void Bee::logInfo()
+void Particle::logInfo()
 {
-    *log << " Bee #" << this << ":" << endl << "  ";
-    log->width(BSO::W);
+    *log << " Particle #" << this << ":" << endl << "  ";
+    log->width(PSO::W);
     *log << "dimention:";
     for (int i = 0; i < swarm->getN(); ++i)
     {
-        log->width(BSO::W);
+        log->width(PSO::W);
         *log << i + 1;
     }
     *log << endl << "  ";
-    log->width(BSO::W);
+    log->width(PSO::W);
     *log << "x:";
     for (int i = 0; i < swarm->getN(); ++i)
     {
-        log->width(BSO::W);
+        log->width(PSO::W);
         *log << x[i];
     }
     *log << endl << "  ";
-    log->width(BSO::W);
+    log->width(PSO::W);
     *log << "p:";
     for (int i = 0; i < swarm->getN(); ++i)
     {
-        log->width(BSO::W);
+        log->width(PSO::W);
         *log << p[i];
     }
     *log << endl << "  ";
-    log->width(BSO::W);
+    log->width(PSO::W);
     *log << "v:";
     for (int i = 0; i < swarm->getN(); ++i)
     {
-        log->width(BSO::W);
+        log->width(PSO::W);
         *log << v[i];
     }
     *log << endl;

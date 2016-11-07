@@ -3,9 +3,9 @@ CFLAGS     = -std=c++14 -O2 -c -Wall -Wextra
 LFLAGS     = -std=c++14 -lyaml-cpp
 SOURCES    = main.cpp \
              swarm.cpp \
-             bee.cpp
+             particle.cpp
 OBJECTS    = $(SOURCES:.cpp=.o)
-EXECUTABLE = bso
+EXECUTABLE = pso
 
 all: $(SOURCES) $(EXECUTABLE)
 

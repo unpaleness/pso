@@ -4,14 +4,14 @@
 #include <string>
 #include <fstream>
 
-#include "bee.h"
+#include "particle.h"
 
 using namespace std;
 
-namespace BSO
+namespace PSO
 {
 
-class Bee;
+class Particle;
 
 class Swarm
 {
@@ -28,29 +28,29 @@ public:
     double getG(unsigned int i);   // Getter for g
     const double *getG();          // Getter for g
     void setG(unsigned int i, double val); // Setter for g
-    bool getEnableBeeLog();        // Getter for enableBeeLog
+    bool getEnableParticleLog();        // Getter for enableParticleLog
     void start();                  // Start simulation
     double f(const double *x);           // Function to optimize
 
 private:
-    bool enableBeeLog { false };     // Enable/Disable detailed log for every bee
+    bool enableParticleLog { false };     // Enable/Disable detailed log for every particle
     bool isMemoryAlloc { false };    // Flag for alloc memory to g & min & max
-    bool areBeesAllocated { false }; // Flag for alloc memory to array of bees
-    bool areBeesCreated { false };   // Flag for alloc memory for every bee
+    bool areParticlesAllocated { false }; // Flag for alloc memory to array of particles
+    bool areParticlesCreated { false };   // Flag for alloc memory for every particle
     ofstream *log;       // Logging filestream
     int N;               // Dimestion
     double *min;         // Lower boundaries for function
     double *max;         // Upper boundaries for function
     int nIterations;     // Amount of iterations
-    int nBees;           // Amount of bees
-    double pCoef;        // Bee's best position coefficient
-    double gCoef;        // Bee's best position coefficient
+    int nParticles;           // Amount of particles
+    double pCoef;        // Particle's best position coefficient
+    double gCoef;        // Particle's best position coefficient
     double vCoef;        // Velocity coefficient
     double *g;           // Best known position
-    Bee **bees;          // Bees BZZZZZ!
+    Particle **particles;          // Particles BZZZZZ!
 
     bool readConfig(const string filename = "config.yml"); // Reads parameters
-    bool createBees();   // Creates bees
+    bool createParticles();   // Creates particles
 };
 
 }
